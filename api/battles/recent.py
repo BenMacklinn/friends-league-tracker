@@ -1,4 +1,4 @@
-"""Vercel API route for battle data."""
+"""Vercel API route for recent battles."""
 
 import os
 import sys
@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 
 # Add the parent directory to the Python path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from database import db_manager
 from config import settings
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def handler(request):
-    """Vercel serverless function handler for battles."""
+    """Vercel serverless function handler for recent battles."""
     try:
         # Get limit from query parameters
         limit = 50
