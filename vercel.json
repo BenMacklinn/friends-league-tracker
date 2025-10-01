@@ -19,11 +19,5 @@
       "src": "/(.*)",
       "dest": "/web/$1"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/collect",
-      "schedule": "0 23 * * *"
-    }
   ]
 }
