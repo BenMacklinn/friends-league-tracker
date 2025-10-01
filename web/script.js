@@ -33,7 +33,7 @@ async function loadData() {
 // Load leaderboard data
 async function loadLeaderboard() {
     try {
-        const response = await fetch(`${API_BASE_URL}/leaderboard/`);
+        const response = await fetch(`${API_BASE_URL}/leaderboard-simple`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -53,7 +53,7 @@ async function loadLeaderboard() {
 // Load recent battles
 async function loadRecentBattles() {
     try {
-        const response = await fetch(`${API_BASE_URL}/battles/recent?limit=10`);
+        const response = await fetch(`${API_BASE_URL}/battles-simple?limit=10`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -415,7 +415,7 @@ function closePlayerDetails() {
 async function getPlayerHeadToHead(playerTag) {
     try {
         // Get all battles
-        const response = await fetch(`${API_BASE_URL}/battles/recent?limit=100`);
+        const response = await fetch(`${API_BASE_URL}/battles-simple?limit=100`);
         const battles = await response.json();
         
         // Filter battles involving this player
