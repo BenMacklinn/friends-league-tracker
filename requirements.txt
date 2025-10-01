@@ -1,8 +1,2 @@
-fastapi==0.118.0
-uvicorn==0.37.0
-requests==2.32.5
-python-dotenv==1.1.1
-schedule==1.2.2
-rich==14.1.0
-tabulate==0.9.0
-click==8.3.0
+# Minimal requirements for Vercel
+# No dependencies needed for basic functions
