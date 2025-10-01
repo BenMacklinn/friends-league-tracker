@@ -1,1 +1,0 @@
-# Battles API package
