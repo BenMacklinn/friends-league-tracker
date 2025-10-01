@@ -20,11 +20,6 @@
       "dest": "/web/$1"
     }
   ],
-  "functions": {
-    "api/**/*.py": {
-      "maxDuration": 30
-    }
-  },
   "crons": [
     {
       "path": "/api/cron/collect",
