@@ -20,7 +20,7 @@ class Settings:
         
         # Set base URL based on proxy configuration
         if self.use_royaleapi_proxy:
-            self.clash_royale_api_base_url = self.royaleapi_proxy_url
+            self.clash_royale_api_base_url = f"{self.royaleapi_proxy_url.rstrip('/')}/v1"
         else:
             self.clash_royale_api_base_url = os.getenv(
                 "CLASH_ROYALE_API_BASE_URL", 
