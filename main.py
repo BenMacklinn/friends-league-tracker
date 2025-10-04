@@ -10,6 +10,11 @@ from database import db_manager
 from api_client import api_client
 from background_scheduler import DataCollector
 from cli import display_leaderboard, display_player_stats, display_recent_battles
+from api_server import app as fastapi_app
+
+
+# Expose FastAPI app for Vercel serverless handler
+app = fastapi_app
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +34,6 @@ def setup_logging(level: str = "INFO"):
 def run_server(host=None, port=None):
     """Run the FastAPI server."""
     import uvicorn
-    from api_server import app
     
     # Use provided host/port or fall back to settings
     server_host = host or settings.host
