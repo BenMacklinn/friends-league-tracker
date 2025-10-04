@@ -1,5 +1,7 @@
 // API Configuration
-const API_BASE_URL = window.location.origin + '/api';
+const DEFAULT_LOCAL_API = 'http://localhost:8000';
+const DEFAULT_PROD_API = 'https://friends-league-tracker.vercel.app';
+const API_BASE_URL = window.__API_BASE_URL || (window.location.hostname === 'localhost' ? DEFAULT_LOCAL_API : DEFAULT_PROD_API);
 
 // Global state
 let leaderboardData = null;
@@ -9,9 +11,6 @@ let battlesData = null;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing app...');
     loadData();
-    
-    // Auto-refresh every 30 seconds
-    setInterval(loadData, 30000);
     
     // Add initial click listeners
     addClickListeners();
@@ -33,7 +32,7 @@ async function loadData() {
 // Load leaderboard data
 async function loadLeaderboard() {
     try {
-        const response = await fetch(`${API_BASE_URL}/leaderboard-simple`);
+        const response = await fetch(`${API_BASE_URL}/leaderboard`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -53,7 +52,7 @@ async function loadLeaderboard() {
 // Load recent battles
 async function loadRecentBattles() {
     try {
-        const response = await fetch(`${API_BASE_URL}/battles-simple?limit=10`);
+        const response = await fetch(`${API_BASE_URL}/battles/recent?limit=10`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -414,8 +413,12 @@ function closePlayerDetails() {
 // Get player head-to-head data
 async function getPlayerHeadToHead(playerTag) {
     try {
-        // Get all battles
-        const response = await fetch(`${API_BASE_URL}/battles-simple?limit=100`);
+        // Get player's overall stats from the database
+        const playerResponse = await fetch(`${API_BASE_URL}/player/${playerTag}`);
+        const playerStats = await playerResponse.json();
+        
+        // Get all battles for head-to-head and recent battles
+        const response = await fetch(`${API_BASE_URL}/battles/recent?limit=1000`);
         const battles = await response.json();
         
         // Filter battles involving this player
@@ -425,9 +428,6 @@ async function getPlayerHeadToHead(playerTag) {
         
         // Calculate head-to-head records
         const opponents = {};
-        let totalWins = 0;
-        let totalLosses = 0;
-        let totalCrowns = 0;
         
         playerBattles.forEach(battle => {
             const opponent = battle.player1 === playerTag ? battle.player2 : battle.player1;
@@ -444,11 +444,9 @@ async function getPlayerHeadToHead(playerTag) {
             
             if (battle.winner === playerTag) {
                 opponents[opponent].wins++;
-                totalWins++;
-                totalCrowns += battle.crowns;
+                opponents[opponent].crowns += battle.crowns;
             } else {
                 opponents[opponent].losses++;
-                totalLosses++;
             }
         });
         
@@ -458,16 +456,13 @@ async function getPlayerHeadToHead(playerTag) {
             opponent.winrate = total > 0 ? (opponent.wins / total) * 100 : 0;
         });
         
-        // Get player's overall stats
-        const player = leaderboardData.players.find(p => p.player_tag === playerTag);
-        
         return {
             overall: {
-                wins: totalWins,
-                losses: totalLosses,
-                winrate: totalWins + totalLosses > 0 ? (totalWins / (totalWins + totalLosses)) * 100 : 0,
-                elo: player ? player.elo_rating : 1200,
-                crowns: totalCrowns
+                wins: playerStats.wins,
+                losses: playerStats.losses,
+                winrate: playerStats.winrate,
+                elo: playerStats.elo_rating,
+                crowns: playerStats.total_crowns
             },
             opponents: Object.values(opponents).sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses)),
             recentBattles: playerBattles.slice(0, 10)
