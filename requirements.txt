@@ -3,3 +3,7 @@ python-dotenv
 requests
 schedule
 rich
+tabulate
+fastapi
+pydantic
+uvicorn
