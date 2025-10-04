@@ -28,6 +28,8 @@ class Settings:
             )
         
         # Database
+        self.database_url = os.getenv("DATABASE_URL", "").strip()
+        self.database_ssl_mode = os.getenv("DB_SSLMODE", "require")
         self.database_path = os.getenv("DATABASE_PATH", "./data/friends_league.db")
         
         # Polling
