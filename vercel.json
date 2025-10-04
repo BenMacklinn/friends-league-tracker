@@ -6,8 +6,8 @@
     }
   },
   "rewrites": [
-    { "source": "/leaderboard", "destination": "/api/leaderboard" },
-    { "source": "/battles/recent", "destination": "/api/battles" },
-    { "source": "/refresh", "destination": "/api/collect" }
+    { "source": "/leaderboard", "destination": "/api/leaderboard.py" },
+    { "source": "/battles/recent", "destination": "/api/battles.py" },
+    { "source": "/refresh", "destination": "/api/collect.py" }
   ]
 }
