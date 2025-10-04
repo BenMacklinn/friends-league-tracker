@@ -62,7 +62,7 @@ class BattleInfo(BaseModel):
     elo_change_loser: Optional[float] = None
 
 
-@app.get("/", response_model=Dict[str, str])
+@app.get("/", response_model=Dict[str, Any])
 async def root():
     """Root endpoint."""
     return {
