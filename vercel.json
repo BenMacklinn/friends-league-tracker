@@ -1,15 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python"
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.12"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/main.py"
-    }
+  },
+  "rewrites": [
+    { "source": "/leaderboard", "destination": "/api/leaderboard" },
+    { "source": "/battles/recent", "destination": "/api/battles" },
+    { "source": "/refresh", "destination": "/api/collect" }
   ]
 }
