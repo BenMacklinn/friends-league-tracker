@@ -1,2 +1,3 @@
 # Minimal requirements for Vercel
 python-dotenv
+requests
