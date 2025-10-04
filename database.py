@@ -1,5 +1,6 @@
 """Database models and operations for Friends League tracker."""
 
+import errno
 import sqlite3
 import json
 from datetime import datetime
@@ -31,13 +32,20 @@ class DatabaseManager:
     """Manages SQLite database operations."""
     
     def __init__(self, db_path: str = None):
-        self.db_path = db_path or settings.database_path
+        self.db_path = Path(db_path or settings.database_path)
         self._ensure_database_directory()
         self._init_database()
     
     def _ensure_database_directory(self):
         """Ensure the database directory exists."""
-        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
+        try:
+            self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            if exc.errno != errno.EROFS:
+                raise
+            fallback_dir = Path("/tmp/data")
+            fallback_dir.mkdir(parents=True, exist_ok=True)
+            self.db_path = fallback_dir / self.db_path.name
     
     def _init_database(self):
         """Initialize database tables."""
