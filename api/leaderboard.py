@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database import db_manager
 from config import settings
+from ranking_system import stats_calculator
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +21,11 @@ logger = logging.getLogger(__name__)
 def handler(request):
     """Vercel serverless function handler for leaderboard."""
     try:
+        # Refresh stats to ensure we only include battles since season start
+        player_tags = settings.get_player_tags_list()
+        if player_tags:
+            stats_calculator.update_all_player_stats(player_tags)
+
         # Get all player stats
         all_stats = db_manager.get_all_player_stats()
         
